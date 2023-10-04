@@ -1,9 +1,9 @@
-package com.nntk.sb.controller;
+package com.nntk.restplus.sample.controller;
 
-import com.nntk.sb.api.DefaultResultObserverAbs;
-import com.nntk.sb.api.my.MyApi;
-import com.nntk.sb.api.my.MyBodyEntity;
-import com.nntk.sb.api.my.UserInfo;
+import com.nntk.restplus.sample.api.UserInfo;
+import com.nntk.restplus.sample.api.DefaultResultObserver;
+import com.nntk.restplus.sample.api.UserInfoApi;
+import com.nntk.restplus.sample.api.RespEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class MyController {
 
 
     @Resource
-    private MyApi myApi;
+    private UserInfoApi userInfoApi;
 
 
     @GetMapping("/test")
@@ -29,7 +29,7 @@ public class MyController {
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        List<UserInfo> data = myApi.getList(1, 2, paramMap)
+        List<UserInfo> data = userInfoApi.getList(1, 2, paramMap)
                 .executeForResult();
 
         return data;
@@ -39,16 +39,16 @@ public class MyController {
     public Object login1() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        MyBodyEntity myBodyEntity = myApi.login1(paramMap)
+        RespEntity respEntity = userInfoApi.login1(paramMap)
                 .executeForResult();
-        return myBodyEntity;
+        return respEntity;
     }
 
     @GetMapping("/login2")
     public Object login2() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        myApi.login2(paramMap).observe(new DefaultResultObserverAbs() {
+        userInfoApi.login2(paramMap).observe(new DefaultResultObserver() {
             @Override
             public void complete() {
                 super.complete();
@@ -62,7 +62,7 @@ public class MyController {
     public Object login3() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        myApi.login3(paramMap);
+        userInfoApi.login3(paramMap);
         return "success";
     }
 
@@ -73,7 +73,7 @@ public class MyController {
 
         Map<String, String> header = new HashMap<>();
         header.put("TenantId", "hello header");
-        myApi.register(paramMap, header);
+        userInfoApi.register(paramMap, header);
         return "success";
     }
 
@@ -84,14 +84,14 @@ public class MyController {
         FileSystemResource resource = new FileSystemResource(new File("C:\\Users\\hhm\\Downloads\\Capture001.png"));
 
         paramMap.put("file", resource);
-        myApi.upload(paramMap);
+        userInfoApi.upload(paramMap);
         return "success";
     }
 
 
     @GetMapping("/download")
     public Object download() {
-        File file = myApi.download("C:\\Users\\hhm\\Downloads\\11\\Capture0011111.png").executeForData();
+        File file = userInfoApi.download("C:\\Users\\hhm\\Downloads\\11\\Capture0011111.png").executeForData();
         return "success:" + file.length();
     }
 }

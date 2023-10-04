@@ -1,9 +1,9 @@
-package com.nntk.sb.api.my;
+package com.nntk.restplus.sample.api;
 
 import lombok.Data;
 
 @Data
-public class MyBodyEntity {
+public class RespEntity {
     private int code;
     private String message;
 }

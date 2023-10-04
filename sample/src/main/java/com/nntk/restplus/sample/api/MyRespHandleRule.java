@@ -1,13 +1,16 @@
-package com.nntk.sb.api.my;
+package com.nntk.restplus.sample.api;
 
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.nntk.restplus.abs.AbsBodyHandleRule;
+import com.nntk.restplus.abs.AbsRespHandleRule;
 import org.springframework.stereotype.Component;
 
+/**
+ * 自定义返回结果定义规则
+ */
 @Component
-public class MyAbsBodyHandleRule extends AbsBodyHandleRule {
+public class MyRespHandleRule extends AbsRespHandleRule {
 
     private JSONObject jsonObject;
 

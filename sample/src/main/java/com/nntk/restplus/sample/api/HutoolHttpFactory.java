@@ -1,4 +1,4 @@
-package com.nntk.sb.api;
+package com.nntk.restplus.sample.api;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;

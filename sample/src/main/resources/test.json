@@ -3,7 +3,12 @@
   "message": "success",
   "data": [
     {
-      "name": "zs"
+      "name": "张三",
+      "sex": "男"
+    },
+    {
+      "name": "李四",
+      "sex": "女"
     }
   ]
 }

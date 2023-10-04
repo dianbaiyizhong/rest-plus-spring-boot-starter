@@ -1,4 +1,4 @@
-package com.nntk.sb.api.my;
+package com.nntk.restplus.sample.api;
 
 import lombok.Data;
 

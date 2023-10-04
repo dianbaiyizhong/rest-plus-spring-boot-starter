@@ -1,7 +1,7 @@
 package com.nntk.restplus.aop;
 
 import com.nntk.restplus.abs.AbsBasicRespObserver;
-import com.nntk.restplus.abs.AbsBodyHandleRule;
+import com.nntk.restplus.abs.AbsRespHandleRule;
 import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.annotation.Download;
 import com.nntk.restplus.annotation.RestPlus;
@@ -55,11 +55,11 @@ public class RestPlusAopConfig {
 
 
         // 获取定义的结果判断逻辑和处理逻辑
-        Class<AbsBodyHandleRule> respHandlerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "respHandler");
+        Class<AbsRespHandleRule> respHandlerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "respHandler");
         Class<AbsBasicRespObserver> observerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "observe");
 
 
-        AbsBodyHandleRule handler = SpringUtil.getBean(respHandlerClass);
+        AbsRespHandleRule handler = SpringUtil.getBean(respHandlerClass);
         AbsBasicRespObserver observer = SpringUtil.getBean(observerClass);
 
 

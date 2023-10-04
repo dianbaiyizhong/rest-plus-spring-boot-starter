@@ -1,7 +1,7 @@
 package com.nntk.restplus.returntype;
 
 import com.nntk.restplus.abs.AbsBasicRespObserver;
-import com.nntk.restplus.abs.AbsBodyHandleRule;
+import com.nntk.restplus.abs.AbsRespHandleRule;
 import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.util.HttpRespObserver;
 import com.nntk.restplus.util.IoUtil;
@@ -43,13 +43,13 @@ public class Call<T> {
     }
 
 
-    public void setRespBodyHandleRule(AbsBodyHandleRule absBodyHandleRule) {
-        this.absBodyHandleRule = absBodyHandleRule;
+    public void setRespBodyHandleRule(AbsRespHandleRule absRespHandleRule) {
+        this.absRespHandleRule = absRespHandleRule;
     }
 
     private AbsBasicRespObserver configObserver;
 
-    private AbsBodyHandleRule absBodyHandleRule;
+    private AbsRespHandleRule absRespHandleRule;
 
     public void setReturnType(Type returnType) {
         this.returnType = returnType;
@@ -69,7 +69,7 @@ public class Call<T> {
     public Call<T> observe(AbsBasicRespObserver observer) {
         isObserve = true;
 
-        HttpRespObserver.observe(observer, throwable, httpStatus, absBodyHandleRule, bodyStream != null);
+        HttpRespObserver.observe(observer, throwable, httpStatus, absRespHandleRule, bodyStream != null);
         return this;
     }
 
@@ -77,7 +77,7 @@ public class Call<T> {
         if (!isObserve) {
             observe(configObserver);
         }
-        String data = absBodyHandleRule.getHttpBody();
+        String data = absRespHandleRule.getHttpBody();
         return httpFactory.parseObject(data, returnType);
     }
 
@@ -89,7 +89,7 @@ public class Call<T> {
         if (bodyStream != null) {
             return (T) IoUtil.byteToFile(bodyStream, downloadFile);
         }
-        String data = absBodyHandleRule.getData();
+        String data = absRespHandleRule.getData();
         return httpFactory.parseObject(data, returnType);
     }
 

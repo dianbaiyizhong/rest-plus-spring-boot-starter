@@ -1,4 +1,4 @@
-package com.nntk.sb.api;
+package com.nntk.restplus.sample.api;
 
 import com.nntk.restplus.abs.AbsBasicRespObserver;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class DefaultResultObserverAbs extends AbsBasicRespObserver {
+public class DefaultResultObserver extends AbsBasicRespObserver {
     @Override
     public void callBusinessFail(int code, String messages) {
         log.info("callBusinessFail...");
@@ -17,28 +17,27 @@ public class DefaultResultObserverAbs extends AbsBasicRespObserver {
 
     @Override
     public void complete() {
-        log.info("complete...");
+        log.info("无论最终结果如何，请求已经完成了");
     }
 
     @Override
     public void callHttpFail(int httpStatus, String message) {
-        log.info("callHttpFail...{},{}", httpStatus, message);
-
+        log.info("http状态码不是200...{},{}", httpStatus, message);
     }
 
     @Override
     public void callUnknownException(Throwable throwable) {
-        log.error("callUnknownException...{}", throwable);
+        log.error("发生了未知错误，一般是状态码500的错误...{}", throwable);
     }
 
     @Override
     public void callHttpSuccess() {
-        log.info("callHttpSuccess...");
+        log.info("状态码200...");
     }
 
     @Override
     public void callBusinessSuccess() {
-        log.info("callBusinessSuccess...");
+        log.info("业务请求成功了，一般是code为0...");
 
     }
 }

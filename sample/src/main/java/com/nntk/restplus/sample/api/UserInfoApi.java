@@ -1,4 +1,4 @@
-package com.nntk.sb.api.my;
+package com.nntk.restplus.sample.api;
 
 
 import com.nntk.restplus.annotation.*;
@@ -9,38 +9,38 @@ import java.util.List;
 import java.util.Map;
 
 @RestPlus(
-        baseUrl = "http://localhost:8080",
-        respHandler = MyAbsBodyHandleRule.class
+        baseUrl = "http://localhost:8080/api/user",
+        respHandler = MyRespHandleRule.class
 )
-@Intercept(classType = {MyIntercept.class, MyIntercept2.class})
-public interface MyApi extends MyBaseApi {
+@Intercept(classType = {LogIntercept.class, TokenIntercept.class})
+public interface UserInfoApi extends BaseApi {
 
-    @GET(url = "/api/list/{id}")
+    @GET(url = "/list/{id}")
     Call<List<UserInfo>> getList(@Path("id") Integer userName, @QueryParam("num") int num, @QueryMap Map<String, Object> map);
 
 
-    @POST(url = "/api/login")
-    Call<MyBodyEntity> login1(@Body Map<String, Object> map);
+    @POST(url = "/login")
+    Call<RespEntity> login1(@Body Map<String, Object> map);
 
 
-    @POST(url = "/api/login")
+    @POST(url = "/login")
     Call<?> login2(@Body Map<String, Object> map);
 
 
-    @POST(url = "/api/login")
+    @POST(url = "/login")
     void login3(@Body Map<String, Object> map);
 
 
     @FormData
-    @POST(url = "/api/register")
+    @POST(url = "/register")
     void register(@Body Map<String, Object> map, @Header Map<String, String> headerMap);
 
     @FormData
-    @POST(url = "/api/upload")
+    @POST(url = "/upload")
     void upload(@Body Map<String, Object> map);
 
     @Download
-    @GET(url = "/api/download")
+    @GET(url = "/download")
     Call<File> download(@FilePath String filePath);
 
 

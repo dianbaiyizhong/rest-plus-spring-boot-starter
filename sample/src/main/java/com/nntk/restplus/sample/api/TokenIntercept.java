@@ -1,4 +1,4 @@
-package com.nntk.sb.api.my;
+package com.nntk.restplus.sample.api;
 
 import com.nntk.restplus.intercept.RestPlusHandleIntercept;
 import com.nntk.restplus.strategy.HttpExecuteContext;
@@ -7,12 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class MyIntercept implements RestPlusHandleIntercept {
+public class TokenIntercept implements RestPlusHandleIntercept {
     @Override
     public HttpExecuteContext handle(HttpExecuteContext context) {
 
-        log.info("=======MyIntercept");
-
+        log.info("=======MyIntercept2");
 
         return context;
     }
