@@ -11,8 +11,7 @@ public class LogIntercept implements RestPlusHandleIntercept {
     @Override
     public HttpExecuteContext handle(HttpExecuteContext context) {
 
-        log.info("=======MyIntercept");
-
+        log.info("日志拦截器===你可以在这里全局处理打印日志...");
 
         return context;
     }

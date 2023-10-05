@@ -5,6 +5,7 @@ import com.nntk.restplus.abs.AbsRespHandleRule;
 import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.util.HttpRespObserver;
 import com.nntk.restplus.util.IoUtil;
+import org.springframework.http.HttpStatus;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -68,29 +69,33 @@ public class Call<T> {
 
     public Call<T> observe(AbsBasicRespObserver observer) {
         isObserve = true;
-
         HttpRespObserver.observe(observer, throwable, httpStatus, absRespHandleRule, bodyStream != null);
         return this;
     }
 
+
     public T executeForResult() {
         if (!isObserve) {
-            observe(configObserver);
+            HttpRespObserver.observe(configObserver, throwable, httpStatus, absRespHandleRule, bodyStream != null);
         }
-        String data = absRespHandleRule.getHttpBody();
-        return httpFactory.parseObject(data, returnType);
+        if (bodyStream != null) {
+            return (T) IoUtil.byteToFile(bodyStream, downloadFile);
+        }
+        if (httpStatus == HttpStatus.OK.value() && absRespHandleRule.isBusinessSuccess()) {
+            return httpFactory.parseObject(absRespHandleRule.getHttpBody(), returnType);
+        } else {
+            return null;
+        }
     }
 
     public T executeForData() {
         if (!isObserve) {
-            observe(configObserver);
+            HttpRespObserver.observe(configObserver, throwable, httpStatus, absRespHandleRule, bodyStream != null);
         }
-
-        if (bodyStream != null) {
-            return (T) IoUtil.byteToFile(bodyStream, downloadFile);
+        if (httpStatus == HttpStatus.OK.value() && absRespHandleRule.isBusinessSuccess()) {
+            return httpFactory.parseObject(absRespHandleRule.getData(), returnType);
+        } else {
+            return null;
         }
-        String data = absRespHandleRule.getData();
-        return httpFactory.parseObject(data, returnType);
     }
-
 }

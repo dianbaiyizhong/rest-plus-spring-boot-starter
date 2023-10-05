@@ -27,7 +27,7 @@ public class DefaultResultObserver extends AbsBasicRespObserver {
 
     @Override
     public void callUnknownException(Throwable throwable) {
-        log.error("发生了未知错误，一般是状态码500的错误...{}", throwable);
+        log.error("发生了未知错误，一般是状态码500的错误...", throwable);
     }
 
     @Override

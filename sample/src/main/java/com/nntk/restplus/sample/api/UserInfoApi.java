@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestPlus(
-        baseUrl = "http://localhost:8080/api/user",
+        baseUrl = "http://127.0.0.1:8080/api/user",
         respHandler = MyRespHandleRule.class
 )
 @Intercept(classType = {LogIntercept.class, TokenIntercept.class})
 public interface UserInfoApi extends BaseApi {
 
     @GET(url = "/list/{id}")
-    Call<List<UserInfo>> getList(@Path("id") Integer userName, @QueryParam("num") int num, @QueryMap Map<String, Object> map);
+    Call<List<UserInfo>> getList(@Path("id") Integer userId, @QueryParam("num") int num, @QueryMap Map<String, Object> map);
 
 
     @POST(url = "/login")
@@ -37,7 +37,7 @@ public interface UserInfoApi extends BaseApi {
 
     @FormData
     @POST(url = "/upload")
-    void upload(@Body Map<String, Object> map);
+    Call<?> upload(@Body Map<String, Object> map);
 
     @Download
     @GET(url = "/download")

@@ -1,5 +1,6 @@
 package com.nntk.restplus.sample.api;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -7,9 +8,12 @@ import com.alibaba.fastjson2.JSON;
 import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.entity.RestPlusResponse;
 import com.nntk.restplus.strategy.HttpExecuteContext;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
+import java.util.function.BiConsumer;
 
 /**
  * 工厂模式，实现子产品，底层映射调用
@@ -32,10 +36,24 @@ public class HutoolHttpFactory extends AbsHttpFactory {
     @Override
     public RestPlusResponse post(HttpExecuteContext context) {
         HttpRequest httpRequest = HttpUtil.createPost(context.getUrl());
-        httpRequest.body(JSON.toJSONString(context.getBodyMap()));
         if (context.getHeaderMap() != null) {
             httpRequest.addHeaders(context.getHeaderMap());
         }
+        httpRequest.contentType(context.getContentType());
+        if (context.getContentType().equals(MediaType.MULTIPART_FORM_DATA_VALUE)) {
+            httpRequest.form(context.getBodyMap());
+//            context.getBodyMap().forEach(new BiConsumer<String, Object>() {
+//                @Override
+//                public void accept(String s, Object object) {
+//                    if (object instanceof FileSystemResource) {
+//                        httpRequest.form(s, object);
+//                    }
+//                }
+//            });
+        } else {
+            httpRequest.body(JSON.toJSONString(context.getBodyMap()));
+        }
+
         HttpResponse response = httpRequest.execute();
         RestPlusResponse restPlusResponse = new RestPlusResponse();
         restPlusResponse.setHttpStatus(response.getStatus());
@@ -55,6 +73,16 @@ public class HutoolHttpFactory extends AbsHttpFactory {
 
     @Override
     public RestPlusResponse get(HttpExecuteContext context) {
-        return null;
+        HttpRequest httpRequest = HttpRequest.get(context.getUrl());
+        HttpResponse response = httpRequest.execute();
+        RestPlusResponse restPlusResponse = new RestPlusResponse();
+        restPlusResponse.setHttpStatus(response.getStatus());
+
+        if (context.isDownload()) {
+            restPlusResponse.setBodyStream(IoUtil.readBytes(response.bodyStream()));
+        } else {
+            restPlusResponse.setBody(response.body());
+        }
+        return restPlusResponse;
     }
 }

@@ -21,7 +21,7 @@ public class MyRespHandleRule extends AbsRespHandleRule {
 
     @Override
     public int getCode() {
-        return jsonObject.getInteger("code");
+        return jsonObject.getIntValue("code");
     }
 
     @Override

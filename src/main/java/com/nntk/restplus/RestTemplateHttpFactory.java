@@ -4,12 +4,14 @@ import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.entity.RestPlusResponse;
 import com.nntk.restplus.strategy.HttpExecuteContext;
 import com.nntk.restplus.util.JacksonUtil;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,11 +90,14 @@ public class RestTemplateHttpFactory extends AbsHttpFactory {
     private static MultiValueMap<String, Object> map2MultiValueMap(Map<String, Object> params) {
         MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
-
             List<Object> list = new ArrayList<>();
-            list.add(entry.getValue());
+            if (entry.getValue() instanceof File) {
+                FileSystemResource resource = new FileSystemResource((File) entry.getValue());
+                list.add(resource);
+            } else {
+                list.add(entry.getValue());
+            }
             multiValueMap.put(entry.getKey(), list);
-
         }
         return multiValueMap;
     }

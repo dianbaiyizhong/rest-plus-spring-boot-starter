@@ -2,6 +2,7 @@ package com.nntk.restplus.config;
 
 import com.nntk.restplus.annotation.RestPlus;
 import com.nntk.restplus.aop.RestPlusAopProxyFactory;
+import com.nntk.restplus.util.ResourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -75,8 +76,22 @@ public class RestPlusRegistrar implements ImportBeanDefinitionRegistrar,
                 registry.registerBeanDefinition(beanName, definition);
             }
 
-
         }
+
+        printLogo();
+
+    }
+
+
+    private void printLogo() {
+        String logo = ResourceUtil.readStr("restplus.txt");
+        System.out.println(logo);
+        System.out.println(getColoredString(32, 2, "(v1.0.0)"));
+    }
+
+
+    public static String getColoredString(int color, int fontType, String content) {
+        return String.format("\033[%d;%dm%s\033[0m", color, fontType, content);
     }
 
     /**
