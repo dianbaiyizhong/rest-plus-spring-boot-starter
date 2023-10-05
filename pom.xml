@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>io.github.restplus</groupId>
+    <groupId>io.github.dianbaiyizhong</groupId>
     <artifactId>rest-plus-spring-boot-starter</artifactId>
 
     <version>1.0.0</version>
@@ -175,14 +175,14 @@
     <distributionManagement>
         <repository>
             <!-- 这里的id必须要和全局配置中的release id 一致 -->
-            <id>sonatype_releases</id>
+            <id>sonatype</id>
             <name>Nexus Release Repository</name>
             <!-- 这里就是在创建issue成功后，对方回复的release发布地址-->
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
             <!-- 这里的id必须要和全局配置中的snapshot id 一致 -->
-            <id>sonatype_snapshots</id>
+            <id>sonatype</id>
             <name>Nexus Snapshot Repository</name>
             <!-- 这里就是在创建issue成功后，对方回复的snapshot发布地址-->
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>

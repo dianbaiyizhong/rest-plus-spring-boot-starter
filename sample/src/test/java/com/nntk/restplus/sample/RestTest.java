@@ -2,6 +2,11 @@ package com.nntk.restplus.sample;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.nntk.restplus.sample.api.DefaultResultObserver;
 import com.nntk.restplus.sample.api.RespEntity;
 import com.nntk.restplus.sample.api.UserInfo;
@@ -65,6 +70,18 @@ public class RestTest {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
         List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap)
+                .observe(new DefaultResultObserver() {
+                    @Override
+                    public void callBusinessFail(int code, String messages) {
+                        super.callBusinessFail(code, messages);
+                        log.info("=====业务请求失败了，我要发送消息队列...todo");
+                    }
+
+                    @Override
+                    public void callHttpSuccess() {
+                        super.callHttpSuccess();
+                    }
+                })
                 .executeForData();
         Assert.assertEquals(userInfos.size(), 2);
 
@@ -87,4 +104,33 @@ public class RestTest {
             }
         });
     }
+
+
+    @Test
+    public void notBadExample() {
+
+        HttpRequest httpRequest = HttpUtil.createGet("http://127.0.0.1:8080/api/user/list/1");
+
+        try {
+            HttpResponse response = httpRequest.execute();
+            if (response.getStatus() == 200) {
+                String body = response.body();
+                JSONObject jsonObject = JSON.parseObject(body);
+                if (jsonObject.getInteger("code") == 0) {
+                    String data = jsonObject.getString("data");
+                    List<UserInfo> userInfos = JSON.parseArray(data, UserInfo.class);
+                    log.info("====到这一部总算拿到了想要的结果:{}", userInfos);
+                } else {
+                    log.error("code不为0");
+                }
+            } else {
+                log.error("http请求异常");
+            }
+        } catch (Exception e) {
+            log.error("遇到了未知异常");
+        }
+
+
+    }
+
 }

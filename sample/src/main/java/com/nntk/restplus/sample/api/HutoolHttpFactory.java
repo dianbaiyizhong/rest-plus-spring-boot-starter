@@ -42,14 +42,7 @@ public class HutoolHttpFactory extends AbsHttpFactory {
         httpRequest.contentType(context.getContentType());
         if (context.getContentType().equals(MediaType.MULTIPART_FORM_DATA_VALUE)) {
             httpRequest.form(context.getBodyMap());
-//            context.getBodyMap().forEach(new BiConsumer<String, Object>() {
-//                @Override
-//                public void accept(String s, Object object) {
-//                    if (object instanceof FileSystemResource) {
-//                        httpRequest.form(s, object);
-//                    }
-//                }
-//            });
+
         } else {
             httpRequest.body(JSON.toJSONString(context.getBodyMap()));
         }

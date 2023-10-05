@@ -23,13 +23,13 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
-import sun.reflect.generics.reflectiveObjects.WildcardTypeImpl;
 
 import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 
 
@@ -109,9 +109,9 @@ public class RestPlusAopConfig {
                 Type typeArgument = TypeUtil.toParameterizedType(type).getActualTypeArguments()[0];
                 if (typeArgument instanceof Class) {
                     call.setReturnType(typeArgument);
-                } else if (typeArgument instanceof WildcardTypeImpl) {
+                } else if (typeArgument instanceof WildcardType) {
                 } else {
-                    call.setReturnType(((ParameterizedTypeImpl) typeArgument).getRawType());
+                    call.setReturnType(((ParameterizedType) typeArgument).getRawType());
                 }
                 call.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());

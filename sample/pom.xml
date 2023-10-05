@@ -67,7 +67,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.nntk.restplus</groupId>
+            <groupId>io.github.dianbaiyizhong</groupId>
             <artifactId>rest-plus-spring-boot-starter</artifactId>
             <version>1.0.0</version>
         </dependency>
