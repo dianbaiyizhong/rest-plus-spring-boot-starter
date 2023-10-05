@@ -72,7 +72,7 @@ rest-plus旨在打造一个http请求结果的统一处理优化库
 <dependency>
     <groupId>io.github.dianbaiyizhong</groupId>
     <artifactId>rest-plus-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
