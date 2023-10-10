@@ -13,7 +13,7 @@
     <groupId>io.github.dianbaiyizhong</groupId>
     <artifactId>rest-plus-spring-boot-starter</artifactId>
 
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -62,8 +62,6 @@
     </dependencies>
 
 
-
-
     <build>
         <plugins>
             <!-- Source -->
@@ -107,7 +105,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <version>1.6</version>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>verify</phase>
