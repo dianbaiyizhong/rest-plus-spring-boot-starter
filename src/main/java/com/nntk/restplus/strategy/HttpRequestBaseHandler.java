@@ -101,10 +101,13 @@ public abstract class HttpRequestBaseHandler {
         // 拦截器模式
         Class<? extends RestPlusHandleIntercept>[] interceptList = AnnotationUtil.getObject(clazz, Intercept.class, "classType");
 
-        for (Class<? extends RestPlusHandleIntercept> object : interceptList) {
-            RestPlusHandleIntercept handleIntercept = SpringUtil.getBean(object);
-            httpExecuteContext = handleIntercept.handle(httpExecuteContext);
+        if (interceptList != null) {
+            for (Class<? extends RestPlusHandleIntercept> object : interceptList) {
+                RestPlusHandleIntercept handleIntercept = SpringUtil.getBean(object);
+                httpExecuteContext = handleIntercept.handle(httpExecuteContext);
+            }
         }
+
 
         // 模板方法模式
         return executeHttp(httpExecuteContext);
