@@ -52,7 +52,9 @@ public class RestTest {
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
-        RespEntity respEntity = userInfoApi.login1(paramMap)
+        Map<String, Object> paramMap2 = new HashMap<>();
+        paramMap2.put("class", "三年二班");
+        RespEntity respEntity = userInfoApi.login1(paramMap, paramMap2)
                 .executeForResult();
         System.out.println(respEntity);
 
@@ -69,6 +71,8 @@ public class RestTest {
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("sex", "男");
+
+
         List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap)
                 .observe(new DefaultResultObserver() {
                     @Override

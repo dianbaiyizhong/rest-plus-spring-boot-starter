@@ -21,7 +21,7 @@ public interface UserInfoApi extends BaseApi {
 
 
     @POST(url = "/login")
-    Call<RespEntity> login1(@Body Map<String, Object> map);
+    Call<RespEntity> login1(@Body Map<String, Object> map, @Body Map<String, Object> map2);
 
 
     @POST(url = "/login")

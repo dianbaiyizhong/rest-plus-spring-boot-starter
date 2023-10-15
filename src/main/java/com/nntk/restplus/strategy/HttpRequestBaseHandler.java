@@ -5,18 +5,18 @@ import com.nntk.restplus.annotation.*;
 import com.nntk.restplus.entity.RestPlusResponse;
 import com.nntk.restplus.intercept.RestPlusHandleIntercept;
 import com.nntk.restplus.util.AnnotationUtil;
+import com.nntk.restplus.util.RestAnnotation;
 import com.nntk.restplus.util.SpringUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.MediaType;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,10 +31,12 @@ public abstract class HttpRequestBaseHandler {
 
     public RestPlusResponse execute(ProceedingJoinPoint joinPoint, HttpExecuteContext httpExecuteContext) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+
         Class<?> clazz = method.getDeclaringClass();
         // 解析base url
         String baseUrl = AnnotationUtil.getValue(clazz, RestPlus.class, "baseUrl");
 
+        List<RestAnnotation> methodParameter = AnnotationUtil.getMethodParameter(joinPoint);
 
         boolean isFormData = Arrays.stream(method.getAnnotations()).anyMatch(annotation -> annotation.annotationType() == FormData.class);
 
@@ -48,49 +50,34 @@ public abstract class HttpRequestBaseHandler {
         String childUrl = AnnotationUtil.getAnnotationValue(method, requestType, "url");
         String url = baseUrl + childUrl;
 
-        String[] paramNames = ((CodeSignature) joinPoint.getSignature()).getParameterNames();
-        Object[] paramValues = joinPoint.getArgs();
-        Map<String, Object> paramMap = new HashMap<>();
-        for (int i = 0; i < paramNames.length; i++) {
-            String paramName = paramNames[i];
-            paramMap.put(paramName, paramValues[i]);
-        }
 
-        Parameter[] parameters = method.getParameters();
         Map<String, String> pathMap = new HashMap<>();
-        for (Parameter parameter : parameters) {
-            String value = AnnotationUtil.getAnnotationValue(parameter, Path.class, "value");
-            if (value != null) {
-                if (paramMap.containsKey(parameter.getName())) {
-                    pathMap.put(value, paramMap.get(parameter.getName()).toString());
-                    // 从paramMap删掉path类型参数，方便后面转换
-                    paramMap.remove(parameter.getName());
-                }
-            }
-        }
-
-        Map<String, Object> requestBody = null;
-        Map<String, String> headerMap = null;
-
+        Map<String, Object> requestBody = new HashMap<>();
+        Map<String, String> headerMap = new HashMap<>();
         File filePath = null;
-        for (Parameter parameter : parameters) {
-            boolean body = AnnotationUtil.hasAnnotation(parameter, Body.class);
-            boolean header = AnnotationUtil.hasAnnotation(parameter, Header.class);
-            boolean isFilePath = AnnotationUtil.hasAnnotation(parameter, FilePath.class);
-            if (body) {
-                requestBody = (Map<String, Object>) paramMap.get(parameter.getName());
-            }
-            if (header) {
-                headerMap = (Map<String, String>) paramMap.get(parameter.getName());
-            }
-            if (isFilePath) {
-                if (paramMap.get(parameter.getName()) instanceof File) {
-                    filePath = (File) paramMap.get(parameter.getName());
-                } else {
-                    filePath = new File((String) paramMap.get(parameter.getName()));
+
+        for (RestAnnotation restAnnotation : methodParameter) {
+            if (restAnnotation.getAnnotation() == Body.class) {
+                if (restAnnotation.getParameterValue() != null) {
+                    requestBody.putAll((Map<String, Object>) restAnnotation.getParameterValue());
                 }
             }
+            if (restAnnotation.getAnnotation() == Header.class) {
+                headerMap.putAll((Map<String, String>) restAnnotation.getParameterValue());
+            }
+            if (restAnnotation.getAnnotation() == FilePath.class) {
+                if (restAnnotation.getParameterValue() instanceof File) {
+                    filePath = (File) restAnnotation.getParameterValue();
+                } else {
+                    filePath = new File((String) restAnnotation.getParameterValue());
+                }
+            }
+            if (restAnnotation.getAnnotation() == Path.class) {
+                String value = AnnotationUtil.getAnnotationValue(restAnnotation.getParameter(), Path.class, "value");
+                pathMap.put(value, restAnnotation.getParameterValue() + "");
+            }
         }
+
 
         httpExecuteContext.setDownloadFilePath(filePath);
         String formatUrl = parseTemplate(url, pathMap);
@@ -98,7 +85,7 @@ public abstract class HttpRequestBaseHandler {
         httpExecuteContext.setUrl(formatUrl);
         httpExecuteContext.setBodyMap(requestBody);
         httpExecuteContext.setHeaderMap(headerMap);
-        // 拦截器模式
+        // 责任链模式
         Class<? extends RestPlusHandleIntercept>[] interceptList = AnnotationUtil.getObject(clazz, Intercept.class, "classType");
 
         if (interceptList != null) {
@@ -108,7 +95,6 @@ public abstract class HttpRequestBaseHandler {
             }
         }
 
-
         // 模板方法模式
         return executeHttp(httpExecuteContext);
     }
@@ -117,7 +103,7 @@ public abstract class HttpRequestBaseHandler {
     public abstract RestPlusResponse executeHttp(HttpExecuteContext context);
 
 
-    public static String parseTemplate(String template, Map properties) {
+    private static String parseTemplate(String template, Map<String, String> properties) {
         if (template == null || template.isEmpty() || properties == null) {
             return template;
         }
