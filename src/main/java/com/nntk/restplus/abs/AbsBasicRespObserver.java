@@ -1,6 +1,44 @@
 package com.nntk.restplus.abs;
 
+import com.nntk.restplus.strategy.HttpExecuteContext;
+
 public abstract class AbsBasicRespObserver {
+
+
+    public Class<?> getRequestClass() {
+        return requestClass;
+    }
+
+    public void setRequestClass(Class<?> requestClass) {
+        this.requestClass = requestClass;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
+    private Class<?> requestClass;
+
+
+    private String methodName;
+
+    public HttpExecuteContext getHttpExecuteContext() {
+        return httpExecuteContext;
+    }
+
+    public void setHttpExecuteContext(HttpExecuteContext httpExecuteContext) {
+        this.httpExecuteContext = httpExecuteContext;
+    }
+
+    private HttpExecuteContext httpExecuteContext;
+
+
+    public abstract void beforeRequest();
+
 
     /**
      * 业务异常，也就是所谓的code不等于0

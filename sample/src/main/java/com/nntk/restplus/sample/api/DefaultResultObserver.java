@@ -11,6 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultResultObserver extends AbsBasicRespObserver {
     @Override
+    public void beforeRequest() {
+        log.info("====你可以获取到当前的class:{}和方法:{}", getRequestClass(), getMethodName());
+        log.info("请求之前的操作:{}", getHttpExecuteContext().getUrl());
+    }
+
+    @Override
     public void callBusinessFail(int code, String messages) {
         log.info("callBusinessFail...");
     }

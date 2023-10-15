@@ -1,6 +1,7 @@
 package com.nntk.restplus.strategy;
 
 
+import com.nntk.restplus.abs.AbsBasicRespObserver;
 import com.nntk.restplus.annotation.*;
 import com.nntk.restplus.entity.RestPlusResponse;
 import com.nntk.restplus.intercept.RestPlusHandleIntercept;
@@ -29,7 +30,7 @@ public abstract class HttpRequestBaseHandler {
 
     private Class<? extends Annotation> requestType;
 
-    public RestPlusResponse execute(ProceedingJoinPoint joinPoint, HttpExecuteContext httpExecuteContext) {
+    public RestPlusResponse execute(ProceedingJoinPoint joinPoint, HttpExecuteContext httpExecuteContext, AbsBasicRespObserver observer) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
 
         Class<?> clazz = method.getDeclaringClass();
@@ -95,6 +96,8 @@ public abstract class HttpRequestBaseHandler {
             }
         }
 
+        // 观察者模式，发送消息
+        observer.beforeRequest();
         // 模板方法模式
         return executeHttp(httpExecuteContext);
     }

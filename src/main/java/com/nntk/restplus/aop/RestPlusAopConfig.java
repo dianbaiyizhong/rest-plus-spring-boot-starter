@@ -63,10 +63,13 @@ public class RestPlusAopConfig {
 
         AbsRespHandleRule handler = SpringUtil.getBean(respHandlerClass);
         AbsBasicRespObserver observer = SpringUtil.getBean(observerClass);
-
+        observer.setMethodName(method.getName());
+        observer.setRequestClass(method.getDeclaringClass());
 
         HttpExecuteContext context = new HttpExecuteContext();
-        // 获取http 工厂类
+        observer.setHttpExecuteContext(context);
+
+        // 工厂模式：获取http 工厂类
         Class<AbsHttpFactory> httpFactoryClass = AnnotationUtil.getObject(clazz, RestPlus.class, "httpFactory");
         AbsHttpFactory httpFactory = SpringUtil.getBean(httpFactoryClass);
         if (httpFactoryClass == AbsHttpFactory.class) {
@@ -88,7 +91,7 @@ public class RestPlusAopConfig {
         if (genericReturnType == Void.class) {
             RestPlusVoid vo = new RestPlusVoid();
             try {
-                RestPlusResponse response = select.execute(joinPoint, context);
+                RestPlusResponse response = select.execute(joinPoint, context, observer);
                 vo.setHttpStatus(response.getHttpStatus());
                 handler.setHttpBody(response.getBody());
             } catch (Exception e) {
@@ -104,7 +107,7 @@ public class RestPlusAopConfig {
         } else {
             Call<Object> call = new Call<>();
             try {
-                RestPlusResponse response = select.execute(joinPoint, context);
+                RestPlusResponse response = select.execute(joinPoint, context, observer);
                 Type type = method.getGenericReturnType();
                 Type typeArgument = TypeUtil.toParameterizedType(type).getActualTypeArguments()[0];
                 if (typeArgument instanceof Class) {
