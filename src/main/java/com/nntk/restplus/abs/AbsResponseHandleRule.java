@@ -1,7 +1,7 @@
 package com.nntk.restplus.abs;
 
 
-public abstract class AbsRespHandleRule {
+public abstract class AbsResponseHandleRule {
     private String httpBody;
     public abstract void init(String httpBody);
     public abstract int getCode();

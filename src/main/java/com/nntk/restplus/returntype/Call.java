@@ -1,7 +1,7 @@
 package com.nntk.restplus.returntype;
 
 import com.nntk.restplus.abs.AbsBasicRespObserver;
-import com.nntk.restplus.abs.AbsRespHandleRule;
+import com.nntk.restplus.abs.AbsResponseHandleRule;
 import com.nntk.restplus.abs.AbsHttpFactory;
 import com.nntk.restplus.util.HttpRespObserver;
 import com.nntk.restplus.util.IoUtil;
@@ -44,13 +44,13 @@ public class Call<T> {
     }
 
 
-    public void setRespBodyHandleRule(AbsRespHandleRule absRespHandleRule) {
-        this.absRespHandleRule = absRespHandleRule;
+    public void setRespBodyHandleRule(AbsResponseHandleRule absResponseHandleRule) {
+        this.absResponseHandleRule = absResponseHandleRule;
     }
 
     private AbsBasicRespObserver configObserver;
 
-    private AbsRespHandleRule absRespHandleRule;
+    private AbsResponseHandleRule absResponseHandleRule;
 
     public void setReturnType(Type returnType) {
         this.returnType = returnType;
@@ -69,20 +69,20 @@ public class Call<T> {
 
     public Call<T> observe(AbsBasicRespObserver observer) {
         isObserve = true;
-        HttpRespObserver.observe(observer, throwable, httpStatus, absRespHandleRule, bodyStream != null);
+        HttpRespObserver.observe(observer, throwable, httpStatus, absResponseHandleRule, bodyStream != null);
         return this;
     }
 
 
     public T executeForResult() {
         if (!isObserve) {
-            HttpRespObserver.observe(configObserver, throwable, httpStatus, absRespHandleRule, bodyStream != null);
+            HttpRespObserver.observe(configObserver, throwable, httpStatus, absResponseHandleRule, bodyStream != null);
         }
         if (bodyStream != null) {
             return (T) IoUtil.byteToFile(bodyStream, downloadFile);
         }
-        if (httpStatus == HttpStatus.OK.value() && absRespHandleRule.isBusinessSuccess()) {
-            return httpFactory.parseObject(absRespHandleRule.getHttpBody(), returnType);
+        if (httpStatus == HttpStatus.OK.value() && absResponseHandleRule.isBusinessSuccess()) {
+            return httpFactory.parseObject(absResponseHandleRule.getHttpBody(), returnType);
         } else {
             return null;
         }
@@ -90,10 +90,10 @@ public class Call<T> {
 
     public T executeForData() {
         if (!isObserve) {
-            HttpRespObserver.observe(configObserver, throwable, httpStatus, absRespHandleRule, bodyStream != null);
+            HttpRespObserver.observe(configObserver, throwable, httpStatus, absResponseHandleRule, bodyStream != null);
         }
-        if (httpStatus == HttpStatus.OK.value() && absRespHandleRule.isBusinessSuccess()) {
-            return httpFactory.parseObject(absRespHandleRule.getData(), returnType);
+        if (httpStatus == HttpStatus.OK.value() && absResponseHandleRule.isBusinessSuccess()) {
+            return httpFactory.parseObject(absResponseHandleRule.getData(), returnType);
         } else {
             return null;
         }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 @RestPlus(
         baseUrl = "http://127.0.0.1:8080/api/user",
-        respHandler = MyRespHandleRule.class,
+        respHandler = MyResponseHandleRule.class,
         observe = DefaultResultObserver.class
 )
 @Intercept(classType = {LogIntercept.class, TokenIntercept.class})

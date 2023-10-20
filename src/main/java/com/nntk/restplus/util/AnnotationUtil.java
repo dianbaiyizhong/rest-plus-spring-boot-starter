@@ -85,7 +85,7 @@ public class AnnotationUtil {
         Class<?>[] is = clazz.getInterfaces();
         // 遍历继承关系，获取到对应的值
         for (Class<?> i : is) {
-            String value = AnnotationUtil.getAnnotationValue(i, RestPlus.class, name);
+            String value = AnnotationUtil.getAnnotationValue(i, annotation, name);
             if (StringUtils.hasLength(value)) {
                 baseUrl = value;
                 break;

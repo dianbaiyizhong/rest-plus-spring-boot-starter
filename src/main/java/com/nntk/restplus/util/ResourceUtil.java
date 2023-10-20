@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 public class ResourceUtil {
 
-
     public static String readStr(String fileName) {
         try {
             ClassPathResource cpr = new ClassPathResource(fileName);

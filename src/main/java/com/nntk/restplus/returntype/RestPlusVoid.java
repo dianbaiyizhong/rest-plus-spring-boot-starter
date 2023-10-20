@@ -1,6 +1,6 @@
 package com.nntk.restplus.returntype;
 
-import com.nntk.restplus.abs.AbsRespHandleRule;
+import com.nntk.restplus.abs.AbsResponseHandleRule;
 
 
 
@@ -23,14 +23,14 @@ public class RestPlusVoid {
         this.throwable = throwable;
     }
 
-    public AbsRespHandleRule getRespBodyHandleRule() {
-        return absRespHandleRule;
+    public AbsResponseHandleRule getRespBodyHandleRule() {
+        return absResponseHandleRule;
     }
 
-    public void setRespBodyHandleRule(AbsRespHandleRule absRespHandleRule) {
-        this.absRespHandleRule = absRespHandleRule;
+    public void setRespBodyHandleRule(AbsResponseHandleRule absResponseHandleRule) {
+        this.absResponseHandleRule = absResponseHandleRule;
     }
 
     private Throwable throwable;
-    private AbsRespHandleRule absRespHandleRule;
+    private AbsResponseHandleRule absResponseHandleRule;
 }
