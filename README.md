@@ -297,3 +297,33 @@ public class HutoolHttpFactory extends AbsHttpFactory {
 }
 
 ```
+
+#### 自定义拦截器
+
+> 采用责任链模式，可配置多个拦截器，一般可以用来配置header的token请求
+
+```java
+@Component
+@Slf4j
+public class TokenIntercept implements RestPlusHandleIntercept {
+    @Override
+    public HttpExecuteContext handle(HttpExecuteContext context) {
+        log.info("token拦截器，你可以在这里验证，并把token塞入到参数里");
+        Map<String,String> header = new HashMap<>();
+        header.put("token", "=====");
+        context.setHeaderMap(header);
+        return context;
+    }
+}
+```
+
+```java
+@RestPlus(
+        baseUrl = "http://127.0.0.1:8080/api/user",
+        responseHandler = MyResponseHandleRule.class,
+        observe = MyResultObserver.class
+)
+@Intercept(classType = {LogIntercept.class, TokenIntercept.class})
+public interface UserInfoApi extends BaseApi {
+```
+
