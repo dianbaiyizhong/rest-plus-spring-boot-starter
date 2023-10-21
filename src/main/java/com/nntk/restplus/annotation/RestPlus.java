@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 public @interface RestPlus {
     String baseUrl() default "";
 
-    Class<? extends AbsResponseHandleRule> respHandler() default AbsResponseHandleRule.class;
+    Class<? extends AbsResponseHandleRule> responseHandler() default AbsResponseHandleRule.class;
 
     Class<? extends AbsBasicRespObserver> observe() default AbsBasicRespObserver.class;
 

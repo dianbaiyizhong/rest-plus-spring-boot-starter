@@ -13,7 +13,7 @@
     <groupId>io.github.dianbaiyizhong</groupId>
     <artifactId>rest-plus-spring-boot-starter</artifactId>
 
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

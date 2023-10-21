@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableAsync
-@EnableRestPlus
+@EnableRestPlus // 重要注解，有了它才能启用功能
 public class SampleApplication {
     public static void main(String[] args) {
         SpringApplication.run(SampleApplication.class, args);

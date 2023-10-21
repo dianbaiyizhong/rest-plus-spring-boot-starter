@@ -10,8 +10,8 @@ import java.util.Map;
 
 @RestPlus(
         baseUrl = "http://127.0.0.1:8080/api/user",
-        respHandler = MyResponseHandleRule.class,
-        observe = DefaultResultObserver.class
+        responseHandler = MyResponseHandleRule.class,
+        observe = MyResultObserver.class
 )
 @Intercept(classType = {LogIntercept.class, TokenIntercept.class})
 public interface UserInfoApi extends BaseApi {

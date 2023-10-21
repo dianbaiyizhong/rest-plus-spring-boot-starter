@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class DefaultResultObserver extends AbsBasicRespObserver {
+public class MyResultObserver extends AbsBasicRespObserver {
     @Override
     public void beforeRequest() {
         log.info("====你可以获取到当前的class:{}和方法:{}", getRequestClass(), getMethodName());

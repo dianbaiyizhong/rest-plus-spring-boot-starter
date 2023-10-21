@@ -7,7 +7,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.nntk.restplus.sample.api.DefaultResultObserver;
+import com.nntk.restplus.sample.api.MyResultObserver;
 import com.nntk.restplus.sample.api.RespEntity;
 import com.nntk.restplus.sample.api.UserInfo;
 import com.nntk.restplus.sample.api.UserInfoApi;
@@ -74,7 +74,7 @@ public class RestTest {
 
 
         List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap)
-                .observe(new DefaultResultObserver() {
+                .observe(new MyResultObserver() {
                     @Override
                     public void callBusinessFail(int code, String messages) {
                         super.callBusinessFail(code, messages);
@@ -100,7 +100,7 @@ public class RestTest {
         tmpDir = tmpDir + "test.png";
         File file = FileUtil.writeFromStream(ResourceUtil.getStream("image.webp"), new File(tmpDir));
         paramMap.put("file", file);
-        userInfoApi.upload(paramMap).observe(new DefaultResultObserver() {
+        userInfoApi.upload(paramMap).observe(new MyResultObserver() {
             @Override
             public void complete() {
                 super.complete();

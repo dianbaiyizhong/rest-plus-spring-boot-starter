@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.nntk.restplus</groupId>
-    <artifactId>restplus-demo</artifactId>
+    <artifactId>sample</artifactId>
     <version>1.0-SNAPSHOT</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>io.github.dianbaiyizhong</groupId>
             <artifactId>rest-plus-spring-boot-starter</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
         </dependency>
     </dependencies>
 

@@ -1,38 +1,30 @@
 # rest-plus-spring-boot-starter
 
+
+
+<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
+		<img src="https://img.shields.io/maven-central/v/io.github.dianbaiyizhong/rest-plus-spring-boot-starter.svg?label=Maven%20Central" /></a>
+
+<a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
+		<img src="https://img.shields.io/badge/JDK-8+-green.svg" />
+</a>
+
+
+
 ## 简介
 
-rest-plus旨在打造一个http请求结果的统一处理优化库
+rest-plus旨在打造一个***简易的http请求方式***和***对请求结果的灵活处理***优化库
 
-## 现状痛点
-服务中经常涉及到要调用第三方接口，例如阿里云Api，腾讯云Api，百度云Api，而每一个服务都会调用不同接口，例如获取用户信息，登录验证，上传图片
+## 痛点解决
+#### 处理不同接口的返回结果格式差异
 
-我们可以看下接口返回格式，可以有以下类型
+有些服务业务状态码不一样，例如code，statusCode等
 
-1. code为0代表业务成功
-```json
-{
-  "code": 0,
-  "message": "success"
-}
-```
 
-2. code为200代表业务成功
-```json
-{
-  "code": 0,
-  "message": "success"
-}
-```
 
-3. statusCode为1代表业务成功
-```json
-{
-  "statusCode": 0,
-  "message": "success"
-}
-```
-实属看得脑溢血，最要命的事，你在编码过程中，会有大量的请求方法中不得不包含以下这类代码
+#### 统一每一个请求的处理过程
+
+你在编码过程中，会有大量的请求方法中不得不包含以下这类代码
 ```java
         HttpRequest httpRequest = HttpUtil.createGet("http://127.0.0.1:8080/api/user/list/1");
 
@@ -44,7 +36,7 @@ rest-plus旨在打造一个http请求结果的统一处理优化库
                 if (jsonObject.getInteger("code") == 0) {
                     String data = jsonObject.getString("data");
                     List<UserInfo> userInfos = JSON.parseArray(data, UserInfo.class);
-                    log.info("====到这一部总算拿到了想要的结果:{}", userInfos);
+                    log.info("====到这一步总算拿到了想要的结果:{}", userInfos);
                 } else {
                     log.error("code不为0");
                 }
@@ -55,42 +47,55 @@ rest-plus旨在打造一个http请求结果的统一处理优化库
             log.error("遇到了未知异常");
         }
 ```
-看到没有，一堆try cache，一堆if判断，各种else
+在以上代码中包含着对整个请求过程的异常捕获（try catch），http status的判断，以及对业务状态码（code）的判断
 
-到这里，有些小伙伴会说，统一封装一下不就好了，其实说的也没毛病，不过假设有某个请求需要扩展，例如要在发生错误的时候，发送消息队列，这个时候，还得从封装中再封装？
 
-> 综上所述，为了优化这个场景，这个rest-plus就出来了，我们接下来看下他如何能解决我的问题
+
+#### 灵活适配每一个接口处理逻辑的差异
+
+针对不同的http请求结果处理，可以通过重写方式，实现不同的逻辑
+
+
+
+
+
+
+
+> 综上所述，为了优化这个场景，这个rest-plus就出来了，我们接下来看下他如何能解决这些问题
 
 ## 快速开始
 
-### 引入依赖
+#### 引入依赖
 
-> 本软件主打一个纯净，不引入过多第三方依赖，包括guava，common-lang，fast-json等等常用库，完全基于spring原生组件开发
+> 本软件主打一个纯净，不引入任何第三方依赖，例如guava，common-lang，fast-json等等常用库，完全基于spring原生组件开发
 
 ```xml
 
 <dependency>
     <groupId>io.github.dianbaiyizhong</groupId>
     <artifactId>rest-plus-spring-boot-starter</artifactId>
-    <version>1.0.1</version>
+    <version>1.x</version>
 </dependency>
 ```
 
-### springboot启动类加个注解不过分吧
+#### springboot启动类加个注解不过分吧
 
 ```java
-
-@EnableRestPlus
+@SpringBootApplication
+@EnableRestPlus // 重要注解，有了它才能启用功能
 public class SampleApplication {
     public static void main(String[] args) {
         SpringApplication.run(SampleApplication.class, args);
     }
 }
 ```
-### 自定义“结果处理规则”
+#### 自定义“结果处理规则”
+
+> 采用适配器模式，为每一种服务设定好自己的处理规则
+
 ```java
 @Component
-public class MyRespHandleRule extends AbsRespHandleRule {
+public class MyResponseHandleRule extends AbsResponseHandleRule {
 
     private JSONObject jsonObject;
 
@@ -121,18 +126,24 @@ public class MyRespHandleRule extends AbsRespHandleRule {
     }
 
 }
+
 ```
-通过继承AbsRespHandleRule类，自定义自己的规则，从代码不难看出，在这里你可以定义自己的规则，例如什么情况下，业务才是正常的（code=0）
 
 
+#### 自定义“结果观察者”类
 
-### 自定义“结果观察者”类
+> 采用观察者模式，为每一类接口设置不同的处理方式，例如打印日志，抛异常等
 
 ```java
-
 @Slf4j
 @Component
-public class DefaultResultObserver extends AbsBasicRespObserver {
+public class MyResultObserver extends AbsBasicRespObserver {
+    @Override
+    public void beforeRequest() {
+        log.info("====你可以获取到当前的class:{}和方法:{}", getRequestClass(), getMethodName());
+        log.info("请求之前的操作:{}", getHttpExecuteContext().getUrl());
+    }
+
     @Override
     public void callBusinessFail(int code, String messages) {
         log.info("callBusinessFail...");
@@ -164,16 +175,17 @@ public class DefaultResultObserver extends AbsBasicRespObserver {
 
     }
 }
+
 ```
 
-这个类一般可以用来打印日志，不需要每一个http请求方法都要做重复的事情
 
-### 定义api接口
+
+#### 定义api接口
 ```java
 @RestPlus(
         baseUrl = "http://127.0.0.1:8080/api/user",
-        respHandler = MyRespHandleRule.class,
-        observe = DefaultResultObserver.class
+        responseHandler = MyResponseHandleRule.class,
+        observe = MyResultObserver.class
 )
 public interface UserInfoApi {
 
@@ -183,52 +195,46 @@ public interface UserInfoApi {
 }
 
 ```
-通过上面的定义可以看到，respHandler和observe都是方才已经定义好的，把baseUrl写一下，请求方式用@GET注解一下
-> 定义方式有点像retrofit，其实请求方式我这里也是站在了巨人肩膀，模仿了一下，我比较喜欢他那种方式
+通过上面的定义可以看到，responseHandler和observe都是方才已经定义好的，把baseUrl写一下，请求方式用@GET注解一下
+> 接口定义方式借鉴了retrofit，个人比较喜欢他那种方式
 
-### 注入使用
+#### 注入使用
 ```java
+@Resource
+private UserInfoApi userInfoApi;
+List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap).executeForData();
+```
 
-
-        @Resource
-        private UserInfoApi userInfoApi;
-
-        List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap)
+自定义观察者，通过“覆写”的方式来自定义，你还可以选择是否保留super.callBusinessFail来决定是否要执行默认的操作
+```java
+@Resource
+private UserInfoApi userInfoApi;
+List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap)
                 .observe(new DefaultResultObserver() {
                     @Override
                     public void callBusinessFail(int code, String messages) {
                         super.callBusinessFail(code, messages);
                         log.info("=====业务请求失败了，我要发送消息队列...todo");
                     }
-                })
-                .executeForData();
-
+                }).executeForData();
 ```
 
-自定义观察者，通过“覆写”的方式来自定义，你还可以选择是否保留super.callBusinessFail来决定是否要执行默认的操作
+如果你还要选择更多的观察方式，你可以直接从不同的切入点进行覆写
 ```java
-                    @Override
-                    public void callBusinessFail(int code, String messages) {
-                        super.callBusinessFail(code, messages);
-                        log.info("=====业务请求失败了，我要发送消息队列...todo");
-                    }
-```
-
-如果你还要选择更多的观察方式，你可以直接覆写完成
-```java
-           @Override
-           public void callHttpSuccess() {
-                  super.callHttpSuccess();
-            }
+@Override
+public void callHttpSuccess() {
+      super.callHttpSuccess();
+}
 ```
 
 
 你可以在本项目的sample工程中查看例子，我例举了4种场景，包括了上传文件和下载文件都有
 
 
-### 自定义http请求方式
-> 本项目因为不引入除了spring外的第三方库，所以用的是restTemplate完成http请求，你可以自定义实现自己的http客户端
+#### 自定义http请求方式
+> 本项目因为不引入除了spring外的第三方库，所以用的是restTemplate完成http请求，采用工厂模式，你可以自定义实现自己的http客户端产品
 通过继承AbsHttpFactory,下面是用hutool来实现http请求
+
 ```java
 @Component
 public class HutoolHttpFactory extends AbsHttpFactory {
