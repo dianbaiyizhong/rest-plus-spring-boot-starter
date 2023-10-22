@@ -11,12 +11,12 @@ import com.nntk.restplus.sample.api.MyResultObserver;
 import com.nntk.restplus.sample.api.RespEntity;
 import com.nntk.restplus.sample.api.UserInfo;
 import com.nntk.restplus.sample.api.UserInfoApi;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;

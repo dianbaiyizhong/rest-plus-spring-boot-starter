@@ -10,12 +10,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.15</version>
+        <version>3.1.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
 
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>io.github.dianbaiyizhong</groupId>
             <artifactId>rest-plus-spring-boot-starter</artifactId>
-            <version>1.0.6</version>
+            <version>3.0.0</version>
         </dependency>
     </dependencies>
 

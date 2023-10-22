@@ -15,6 +15,7 @@ import com.nntk.restplus.util.AnnotationUtil;
 import com.nntk.restplus.util.HttpRespObserver;
 import com.nntk.restplus.util.SpringUtil;
 import com.nntk.restplus.util.TypeUtil;
+import jakarta.annotation.Resource;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -24,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -57,7 +57,7 @@ public class RestPlusAopConfig {
 
 
         // 获取定义的结果判断逻辑和处理逻辑
-        Class<AbsResponseHandleRule> respHandlerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "respHandler");
+        Class<AbsResponseHandleRule> respHandlerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "responseHandler");
         Class<AbsBasicRespObserver> observerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "observe");
 
 

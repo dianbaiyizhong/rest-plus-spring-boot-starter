@@ -2,10 +2,11 @@ package com.nntk.restplus.strategy;
 
 import com.nntk.restplus.annotation.GET;
 import com.nntk.restplus.annotation.POST;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
