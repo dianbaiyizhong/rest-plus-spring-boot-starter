@@ -57,7 +57,7 @@ public class RestPlusAopConfig {
 
 
         // 获取定义的结果判断逻辑和处理逻辑
-        Class<AbsResponseHandleRule> respHandlerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "respHandler");
+        Class<AbsResponseHandleRule> respHandlerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "responseHandler");
         Class<AbsBasicRespObserver> observerClass = AnnotationUtil.getAnnotationValue(clazz, RestPlus.class, "observe");
 
 
