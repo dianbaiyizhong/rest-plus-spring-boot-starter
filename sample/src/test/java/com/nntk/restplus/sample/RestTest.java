@@ -7,10 +7,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.nntk.restplus.sample.api.MyResultObserver;
-import com.nntk.restplus.sample.api.RespEntity;
-import com.nntk.restplus.sample.api.UserInfo;
-import com.nntk.restplus.sample.api.UserInfoApi;
+import com.nntk.restplus.sample.api.*;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -28,6 +25,8 @@ public class RestTest {
 
     @Resource
     private UserInfoApi userInfoApi;
+
+
 
 
     /**

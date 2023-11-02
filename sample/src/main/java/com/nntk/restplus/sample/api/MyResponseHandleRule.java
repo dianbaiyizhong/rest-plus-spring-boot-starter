@@ -16,12 +16,11 @@ public class MyResponseHandleRule extends AbsResponseHandleRule {
 
     @Override
     public void init(String httpBody) {
-        this.jsonObject = JSON.parseObject(httpBody);
     }
 
     @Override
     public int getCode() {
-        return jsonObject.getIntValue("code");
+        return 0;
     }
 
     @Override
@@ -32,12 +31,12 @@ public class MyResponseHandleRule extends AbsResponseHandleRule {
 
     @Override
     public String getMessage() {
-        return jsonObject.getString("message");
+        return "";
     }
 
     @Override
     public String getData() {
-        return jsonObject.getString("data");
+        return getHttpBody();
     }
 
 }
