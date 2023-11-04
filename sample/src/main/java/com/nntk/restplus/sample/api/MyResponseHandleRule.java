@@ -16,6 +16,7 @@ public class MyResponseHandleRule extends AbsResponseHandleRule {
 
     @Override
     public void init(String httpBody) {
+        this.jsonObject = JSON.parseObject(httpBody);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class MyResponseHandleRule extends AbsResponseHandleRule {
 
     @Override
     public String getData() {
-        return getHttpBody();
+        return jsonObject.getString("data");
     }
 
 }
