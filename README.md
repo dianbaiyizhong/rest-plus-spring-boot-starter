@@ -77,6 +77,15 @@ rest-plus旨在打造一个***简易的http请求方式***和***对请求结果�
     <version>1.x</version>
 </dependency>
 ```
+springboot3.x
+```xml
+<dependency>
+    <groupId>io.github.dianbaiyizhong</groupId>
+    <artifactId>rest-plus-spring-boot-starter</artifactId>
+    <version>3.x</version>
+</dependency>
+```
+
 
 #### springboot启动类加个注解不过分吧
 
