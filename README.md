@@ -2,7 +2,7 @@
 
 
 
-<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all">
+<a target="_blank" href="https://search.maven.org/artifact/io.github.dianbaiyizhong/rest-plus-spring-boot-starter">
 		<img src="https://img.shields.io/maven-central/v/io.github.dianbaiyizhong/rest-plus-spring-boot-starter.svg?label=Maven%20Central" /></a>
 
 <a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
@@ -77,6 +77,15 @@ rest-plus旨在打造一个***简易的http请求方式***和***对请求结果�
     <version>1.x</version>
 </dependency>
 ```
+springboot3.x
+```xml
+<dependency>
+    <groupId>io.github.dianbaiyizhong</groupId>
+    <artifactId>rest-plus-spring-boot-starter</artifactId>
+    <version>3.x</version>
+</dependency>
+```
+
 
 #### springboot启动类加个注解不过分吧
 
@@ -202,29 +211,29 @@ public interface UserInfoApi {
 ```java
 @Resource
 private UserInfoApi userInfoApi;
-List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap).executeForData();
+        List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap).executeForData();
 ```
 
 自定义观察者，通过“覆写”的方式来自定义，你还可以选择是否保留super.callBusinessFail来决定是否要执行默认的操作
 ```java
 @Resource
 private UserInfoApi userInfoApi;
-List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap)
-                .observe(new DefaultResultObserver() {
-                    @Override
-                    public void callBusinessFail(int code, String messages) {
-                        super.callBusinessFail(code, messages);
-                        log.info("=====业务请求失败了，我要发送消息队列...todo");
-                    }
-                }).executeForData();
+        List<UserInfo> userInfos = userInfoApi.getList(1, 10, paramMap)
+        .observe(new DefaultResultObserver() {
+@Override
+public void callBusinessFail(int code, String messages) {
+        super.callBusinessFail(code, messages);
+        log.info("=====业务请求失败了，我要发送消息队列...todo");
+        }
+        }).executeForData();
 ```
 
 如果你还要选择更多的观察方式，你可以直接从不同的切入点进行覆写
 ```java
 @Override
 public void callHttpSuccess() {
-      super.callHttpSuccess();
-}
+        super.callHttpSuccess();
+        }
 ```
 
 
